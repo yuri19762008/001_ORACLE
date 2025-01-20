@@ -1,3 +1,3 @@
-<h1> Curso de Orecle</h1>
+<h1> Curso de Oracle</h1>
 
-- Todo en Preceso de Aprendizaje
+- Todo en Proceso de Aprendizaje
