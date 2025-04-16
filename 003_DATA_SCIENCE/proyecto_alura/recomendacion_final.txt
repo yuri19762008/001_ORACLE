@@ -1,0 +1,22 @@
+RECOMENDACION: Vender Tienda 4
+
+Tienda 4:
+   Ingresos: $1,038,375,700.00
+   Calificacion: 4.00/5
+   Puntuacion: 0.86
+
+Tienda 3:
+   Ingresos: $1,098,019,600.00
+   Calificacion: 4.05/5
+   Puntuacion: 0.90
+
+Tienda 2:
+   Ingresos: $1,116,343,500.00
+   Calificacion: 4.04/5
+   Puntuacion: 0.90
+
+Tienda 1:
+   Ingresos: $1,150,880,400.00
+   Calificacion: 3.98/5
+   Puntuacion: 0.92
+
