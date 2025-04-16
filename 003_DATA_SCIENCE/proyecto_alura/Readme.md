@@ -43,3 +43,13 @@ Este proyecto utiliza Python y librerías como pandas y matplotlib para analizar
 
 # Recomendación:
     Texto y archivo con la sugerencia de acción basada en los datos.
+
+### Instalación de dependencias con requirements.txt
+    Para que cualquier persona pueda ejecutar el proyecto sin problemas, incluye el archivo requirements.txt en el repositorio. Este archivo contiene la lista de todas las librerías de Python necesarias.
+
+# Pasos para instalar dependencias
+    Abre una terminal en la carpeta raíz del proyecto.
+
+# Ejecuta el siguiente comando para instalar todas las librerías necesarias:
+
+        pip install -r requirements.txt
