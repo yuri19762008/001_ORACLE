@@ -1,4 +1,4 @@
-#Análisis de Desempeño de Tiendas - Alura Store
+### Análisis de Desempeño de Tiendas - Alura Store
 
 
 Este proyecto utiliza Python y librerías como pandas y matplotlib para analizar y visualizar datos de ventas, productos, reseñas y logística de las 4 tiendas de la cadena Alura Store. El objetivo es identificar la tienda menos eficiente y presentar recomendaciones basadas en datos para la toma de decisiones estratégicas.
