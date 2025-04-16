@@ -5,44 +5,32 @@ import traceback
 from typing import Dict, List, Optional
 
 class AnalisisTienda:
-    def __init__(self, directorio_datos="tiendas/"):
-        """Inicialización con el directorio donde están los archivos CSV"""
-        self.directorio_datos = directorio_datos
+    def __init__(self):
+        """Inicialización de la clase de análisis"""
         self.resultados = {}
         
         # Crear directorio para gráficos
         os.makedirs('graficos', exist_ok=True)
         
-    def cargar_datos(self, nombre_archivo):
+    def cargar_datos(self, url):
         """
-        Carga un archivo CSV con manejo de errores
+        Carga un archivo CSV desde una URL con manejo de errores
         
         Args:
-            nombre_archivo: Nombre del archivo CSV a cargar
+            url: URL del archivo CSV a cargar
             
         Returns:
             DataFrame con los datos o None si hay error
         """
         try:
-            ruta_completa = os.path.join(self.directorio_datos, nombre_archivo)
-            
-            # Verificar si el archivo existe
-            if not os.path.exists(ruta_completa):
-                raise FileNotFoundError(f"Error: El archivo {ruta_completa} no existe")
-            
-            # Cargar datos
-            df = pd.read_csv(ruta_completa)
-            print(f"✅ Archivo {nombre_archivo} cargado correctamente")
+            # Cargar datos desde URL
+            df = pd.read_csv(url)
+            print(f"Archivo cargado correctamente desde: {url}")
             return df
             
-        except FileNotFoundError as e:
-            print(f"❌ {str(e)}")
-            return None
-        except pd.errors.EmptyDataError:
-            print(f"❌ Error: El archivo {nombre_archivo} está vacío")
-            return None
         except Exception as e:
-            print(f"❌ Error inesperado al cargar {nombre_archivo}: {str(e)}")
+            print(f"Error al cargar datos desde {url}: {str(e)}")
+            traceback.print_exc()
             return None
     
     def analizar_categoria(self, df, categoria):
@@ -61,7 +49,7 @@ class AnalisisTienda:
             df_cat = df[df['Categoría del Producto'] == categoria]
             
             if df_cat.empty:
-                print(f"⚠️ No hay datos para la categoría {categoria}")
+                print(f" No hay datos para la categoría {categoria}")
                 return {}
             
             # Análisis de la categoría
@@ -84,10 +72,10 @@ class AnalisisTienda:
             return resultados
             
         except KeyError as e:
-            print(f"❌ Error: Columna {e} no encontrada en los datos")
+            print(f" Error: Columna {e} no encontrada en los datos")
             return {}
         except Exception as e:
-            print(f"❌ Error al analizar categoría {categoria}: {str(e)}")
+            print(f" Error al analizar categoría {categoria}: {str(e)}")
             return {}
     
     def graficar_categoria(self, df, categoria, nombre_tienda):
@@ -97,7 +85,7 @@ class AnalisisTienda:
             df_cat = df[df['Categoría del Producto'] == categoria]
             
             if df_cat.empty:
-                print(f"⚠️ No hay datos para graficar la categoría {categoria}")
+                print(f" No hay datos para graficar la categoría {categoria}")
                 return
             
             # Crear figura con subplots
@@ -131,10 +119,10 @@ class AnalisisTienda:
             plt.savefig(f"graficos/{nombre_tienda}_{categoria.replace(' ', '_')}.png")
             plt.close()  # Cerrar figura para evitar consumo excesivo de memoria
             
-            print(f"📊 Gráfico de {categoria} generado en {nombre_tienda}")
+            print(f" Gráfico de {categoria} generado en {nombre_tienda}")
             
         except Exception as e:
-            print(f"❌ Error al graficar categoría {categoria}: {str(e)}")
+            print(f" Error al graficar categoría {categoria}: {str(e)}")
             plt.close()  # Asegurar que la figura se cierre incluso en caso de error
     
     def graficar_comparativa_categorias(self, resultados_tienda, nombre_tienda):
@@ -163,24 +151,24 @@ class AnalisisTienda:
             plt.close()  # Cerrar figura para evitar consumo excesivo de memoria
             
         except Exception as e:
-            print(f"❌ Error al generar comparativa de categorías: {str(e)}")
+            print(f" Error al generar comparativa de categorías: {str(e)}")
             plt.close()  # Asegurar que la figura se cierre incluso en caso de error
     
-    def analizar_tienda(self, nombre_tienda):
+    def analizar_tienda(self, nombre_tienda, url):
         """Analiza una tienda completa, procesando cada categoría independientemente"""
         try:
             print(f"\n{'='*50}")
-            print(f"🏪 ANALIZANDO {nombre_tienda.upper()}")
+            print(f" ANALIZANDO {nombre_tienda.upper()}")
             print(f"{'='*50}")
             
-            # Cargar datos
-            df = self.cargar_datos(f"tienda_{nombre_tienda[-1]}.csv")
+            # Cargar datos desde URL
+            df = self.cargar_datos(url)
             if df is None:
                 return {}
             
             # Obtener categorías únicas
             categorias = df['Categoría del Producto'].unique()
-            print(f"📋 Categorías encontradas: {len(categorias)}")
+            print(f" Categorías encontradas: {len(categorias)}")
             print(f"   {', '.join(categorias)}")
             
             # Análisis general
@@ -193,7 +181,7 @@ class AnalisisTienda:
             
             # Analizar cada categoría individualmente
             for categoria in categorias:
-                print(f"\n📝 Analizando categoría: {categoria}")
+                print(f"\n Analizando categoría: {categoria}")
                 
                 try:
                     # Análisis de la categoría
@@ -201,9 +189,9 @@ class AnalisisTienda:
                     
                     # Mostrar resultados
                     if resultados_categoria:
-                        print(f"  • Producto más vendido: {resultados_categoria.get('Producto Más Vendido', 'N/A')}")
-                        print(f"  • Total ventas: ${resultados_categoria.get('Total Ventas', 0):,.2f}")
-                        print(f"  • Calificación promedio: {resultados_categoria.get('Calificación Promedio', 0):.2f}/5")
+                        print(f"  - Producto más vendido: {resultados_categoria.get('Producto Más Vendido', 'N/A')}")
+                        print(f"  - Total ventas: ${resultados_categoria.get('Total Ventas', 0):,.2f}")
+                        print(f"  - Calificación promedio: {resultados_categoria.get('Calificación Promedio', 0):.2f}/5")
                     
                     # Guardar resultados
                     resultados_tienda['categorias'][categoria] = resultados_categoria
@@ -212,7 +200,7 @@ class AnalisisTienda:
                     self.graficar_categoria(df, categoria, nombre_tienda)
                     
                 except Exception as e:
-                    print(f"❌ Error procesando categoría {categoria}: {str(e)}")
+                    print(f" Error procesando categoría {categoria}: {str(e)}")
                     continue
             
             # Graficar comparativa entre categorías
@@ -223,7 +211,7 @@ class AnalisisTienda:
             return resultados_tienda
             
         except Exception as e:
-            print(f"❌ Error al analizar tienda {nombre_tienda}: {str(e)}")
+            print(f" Error al analizar tienda {nombre_tienda}: {str(e)}")
             traceback.print_exc()
             return {}
     
@@ -231,10 +219,10 @@ class AnalisisTienda:
         """Genera recomendación sobre qué tienda vender"""
         try:
             if len(self.resultados) < 2:
-                print("⚠️ Se necesitan al menos dos tiendas para generar recomendación")
+                print(" Se necesitan al menos dos tiendas para generar recomendación")
                 return
                 
-            print("\n\n📋 GENERANDO RECOMENDACIÓN FINAL...")
+            print("\n\n GENERANDO RECOMENDACIÓN FINAL...")
             
             # Métricas para la decisión
             metricas = {}
@@ -261,19 +249,19 @@ class AnalisisTienda:
             
             # Mostrar recomendación
             print("\n" + "="*60)
-            print(f" RECOMENDACION FINAL: Vender {tienda_vender}")
+            print(f" RECOMENDACIÓN FINAL: Vender {tienda_vender}")
             print("="*60)
             
             # Guardar recomendación
             with open('recomendacion_final.txt', 'w') as f:
-                f.write(f"RECOMENDACION: Vender {tienda_vender}\n\n")
+                f.write(f"RECOMENDACIÓN: Vender {tienda_vender}\n\n")
                 for tienda, datos in tiendas_ordenadas:
                     f.write(f"{tienda}:\n")
-                    f.write(f"   Ingresos: ${datos['ingresos']:,.2f}\n")
-                    f.write(f"   Calificacion: {datos['calificacion']:.2f}/5\n")
-                    f.write(f"   Puntuacion: {datos['puntuacion']:.2f}\n\n")
+                    f.write(f"  • Ingresos: ${datos['ingresos']:,.2f}\n")
+                    f.write(f"  • Calificación: {datos['calificacion']:.2f}/5\n")
+                    f.write(f"  • Puntuación: {datos['puntuacion']:.2f}\n\n")
             
-            print(" Recomendacion guardada en 'recomendacion_final.txt'")
+            print(" Recomendación guardada en 'recomendacion_final.txt'")
             
         except Exception as e:
             print(f" Error al generar recomendación: {str(e)}")
@@ -323,12 +311,21 @@ class AnalisisTienda:
 def main():
     """Función principal"""
     try:
+        # URLs de los archivos CSV
+        urls = [
+            "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_1%20.csv",
+            "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_2.csv",
+            "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_3.csv",
+            "https://raw.githubusercontent.com/alura-es-cursos/challenge1-data-science-latam/refs/heads/main/base-de-datos-challenge1-latam/tienda_4.csv"
+        ]
+        nombres_tiendas = ["Tienda 1", "Tienda 2", "Tienda 3", "Tienda 4"]
+        
         # Crear instancia del analizador
         analizador = AnalisisTienda()
         
         # Analizar cada tienda
-        for i in range(1, 5):
-            analizador.analizar_tienda(f"Tienda {i}")
+        for nombre, url in zip(nombres_tiendas, urls):
+            analizador.analizar_tienda(nombre, url)
         
         # Generar recomendación
         analizador.generar_recomendacion()
