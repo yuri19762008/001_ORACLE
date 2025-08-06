@@ -51,11 +51,6 @@ Durante el Análisis Exploratorio de Datos (EDA), se identificaron insights clav
 - **Matriz de confusión:** para evaluar el desempeño de los modelos de Random Forest y Regresión Logística.  
 - **Importancia de variables (Random Forest):** destacó que el tipo de contrato, antigüedad (tenure) y método de pago son los factores más determinantes para predecir churn.
 
-*Ejemplo de gráfico:*
-
-![Matriz de Confusión Random Forest](visuals/matriz_confusion_rf.png)  
-
-![Importancia Variables RF](visuals/importancia_variables_rf.png)
 
 
 
